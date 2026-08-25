@@ -1,0 +1,152 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f4b9bf0..882dbe4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -61,7 +61,17 @@ source_group(
+ ######
+ # Library inclusions and target config
+ ######
+-find_package(CommonLibSSE CONFIG REQUIRED)
++# CommonLibSSE-NG 6.7.0, built from source.
++# The mod used the "commonlibsse-ng-flatrim" vcpkg port from the colorglass registry,
++# which is far too old for Skyrim 1.7.99 and its Address Library format 5.
++# "flatrim" meant SE+AE with no VR, so VR stays off here to match.
++set(ENABLE_SKYRIM_VR OFF)
++set(BUILD_TESTS OFF)
++set(SKSE_SUPPORT_XBYAK ON)   # must be set BEFORE add_subdirectory to take effect
++add_subdirectory(external/CommonLibNG CommonLibNG EXCLUDE_FROM_ALL)
++# add_commonlibsse_plugin() is only auto-included on CommonLib's prebuilt path.
++include("${CMAKE_CURRENT_SOURCE_DIR}/external/CommonLibNG/cmake/CommonLibSSE.cmake")
++
+ find_package(xbyak REQUIRED CONFIG)
+ 
+ add_commonlibsse_plugin(${PROJECT_NAME} SOURCES ${headers} ${sources})
+@@ -74,7 +84,6 @@ target_include_directories(${PROJECT_NAME}
+         $<INSTALL_INTERFACE:src>
+ )
+ 
+-set(SKSE_SUPPORT_XBYAK ON)
+ target_link_libraries(
+ 	${PROJECT_NAME}
+ 	PRIVATE
+@@ -87,6 +96,18 @@ target_precompile_headers(
+         src/PCH.h
+ )
+ 
++# add_commonlibsse_plugin() generates a SKSEPluginInfo() declaration whose
++# StructCompatibility field lands on versionIndependenceEx, so it can only write 0 or 1
++# and can never set kVersionIndependentEx_AddressLibraryV5 (bit 1). Drop it and declare
++# the plugin by hand in main.cpp instead, so the DLL advertises Address Library format 5.
++# PluginDeclaration::GetSingleton() still works: it just reads the SKSEPlugin_Version
++# export, and PluginVersionData shares its layout for the version and name fields.
++get_target_property(_dtry_sources ${PROJECT_NAME} SOURCES)
++list(REMOVE_ITEM _dtry_sources "${CMAKE_CURRENT_BINARY_DIR}/__${PROJECT_NAME}Plugin.cpp")
++set_target_properties(${PROJECT_NAME} PROPERTIES SOURCES "${_dtry_sources}")
++
++target_compile_definitions(${PROJECT_NAME} PRIVATE NOMINMAX WIN32_LEAN_AND_MEAN)
++
+ 
+ install(TARGETS ${PROJECT_NAME}
+         DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+diff --git a/src/main.cpp b/src/main.cpp
+index ff110ad..5902d40 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -92,3 +92,26 @@ SKSEPluginLoad(const LoadInterface* skse) {
+ 	log::info("{} has finished loading.", plugin->GetName());
+ 	return true;
+ }
++
++
++// Plugin declaration written by hand rather than via add_commonlibsse_plugin()'s
++// generated SKSEPluginInfo(): that path cannot set the Address Library v5 compatibility
++// flag (see CMakeLists.txt). Built against CommonLibSSE-NG 6.7.0, which reads format 5.
++extern "C" [[maybe_unused]] __declspec(dllexport) constinit auto SKSEPlugin_Version = []() {
++    SKSE::PluginVersionData v{};
++    v.PluginName("DtryKeyUtil"sv);
++    v.PluginVersion(REL::Version{ 0, 0, 2, 0 });
++    v.UsesAddressLibrary();
++    v.UsesNoStructs();
++    return v;
++}();
++
++// The generated SKSEPluginInfo() macro also emitted SKSEPlugin_Query; modern SKSE prefers
++// SKSEPlugin_Version, but keep Query so the DLL exports exactly what it did before.
++extern "C" [[maybe_unused]] __declspec(dllexport) bool SKSEPlugin_Query(const SKSE::QueryInterface*,
++                                                                        SKSE::PluginInfo* pluginInfo) {
++    pluginInfo->infoVersion = SKSE::PluginInfo::kVersion;
++    pluginInfo->name = SKSEPlugin_Version.pluginName;
++    pluginInfo->version = SKSEPlugin_Version.pluginVersion;
++    return true;
++}
+diff --git a/src/utils.h b/src/utils.h
+index b4232ab..dd0b13a 100644
+--- a/src/utils.h
++++ b/src/utils.h
+@@ -105,7 +105,7 @@ public:
+ 			std::list<CSimpleIniA::Entry> values;
+ 			a_ini.GetAllValues(a_section, one_key.pItem, values);
+ 			for (auto& one_value : values) {
+-				logger::info(one_value.pItem);
++				logger::info("{}", one_value.pItem);
+ 				func(one_value.pItem);
+ 			}
+ 		}
+diff --git a/vcpkg-configuration.json b/a/vcpkg-configuration.json
+deleted file mode 100644
+index 1967e53..0000000
+--- a/vcpkg-configuration.json
++++ /dev/null
+@@ -1,15 +0,0 @@
+-{
+-  "registries": [
+-    {
+-      "kind": "git",
+-      "repository": "https://gitlab.com/colorglass/vcpkg-colorglass",
+-      "baseline": "1b279b20c7e0db1c9d549ff3b64e024c01317b55",
+-        "packages": [
+-            "commonlibsse-ng",
+-            "commonlibsse-ng-flatrim",
+-            "script-extender-common",
+-            "skse"
+-        ]
+-    }
+-  ]
+-}
+\ No newline at end of file
+diff --git a/vcpkg.json b/vcpkg.json
+index 10ac3f5..eb922da 100644
+--- a/vcpkg.json
++++ b/vcpkg.json
+@@ -1,19 +1,14 @@
+ {
+   "name": "dtrykeyutil",
+-  "version": "2",
+-    "dependencies": [
+-        "boost-stl-interfaces",
+-        "rsm-binary-io",
+-        "simpleini",
+-        "spdlog",
+-        "xbyak",
+-        "commonlibsse-ng-flatrim"
+-    ],
+-  "builtin-baseline": "1c5939e275082fb6f4b2c8a546cd904b978f55ac",
+-  "overrides": [
+-    {
+-      "name": "fmt",
+-      "version": "8.0.1"
+-    }
++  "version": "0.0.2",
++  "builtin-baseline": "00c5775211f45cd08b37fce0484b4cb940e422ab",
++  "dependencies": [
++    "simpleini",
++    "spdlog",
++    "fmt",
++    "xbyak",
++    "rapidcsv",
++    "directxmath",
++    "directxtk"
+   ]
+-}
+\ No newline at end of file
++}

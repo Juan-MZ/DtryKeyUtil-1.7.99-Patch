@@ -1,0 +1,163 @@
+[center][size=5][b]DtryKeyUtil — 1.7.99 Compatibility Patch[/b][/size]
+[i]Unofficial patch. Not a mod. The original mod is required.[/i][/center]
+
+[line]
+
+[size=4][b]⚠ Read this first[/b][/size]
+
+[b]This is not a standalone mod.[/b] It is [b]only the recompiled DLL[/b] for DtryKeyUtil, so the mod works again on Skyrim SE/AE [b]1.7.99[/b] (the 20 August 2026 update).
+
+You [b]must[/b] have the original mod installed: [url=https://www.nexusmods.com/skyrimspecialedition/mods/69944]DtryKeyUtil[/url] by [b]Dtry[/b]. It also provides the [font=Courier New]SKSE/Plugins/dtryKeyUtil/config/[/font] settings tree, which this patch does not include.
+
+DtryKeyUtil is a utility plugin other mods build on, so if something that depends on it stopped working after the update, this is likely why.
+
+[line]
+
+[size=4][b]Why this exists — and what I want out of it[/b][/size]
+
+[b]Nothing. I want nothing out of this.[/b]
+
+No donation points, no endorsements needed, no ownership claimed. The 1.7.99 update broke a plugin that other mods depend on, and I didn't want the community to lose it while waiting.
+
+[b]All credit for DtryKeyUtil belongs to Dtry (D7ry).[/b] Every idea, every feature, every line of the design is theirs. I did not add a feature, remove one, or change how anything works. I rebuilt their code against an updated library and fixed the places the new game version broke. That's the whole contribution — plumbing, not creativity.
+
+[quote]If Dtry updates the mod themselves, [b]use their version and ignore this one[/b]. I'll pull this patch the moment it stops being necessary. It's a stopgap, not a fork.[/quote]
+
+Everything I did is public and reviewable before you download anything:
+[b][url=https://github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch]github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch[/url][/b]
+
+Not affiliated with Dtry or Bethesda.
+
+[line]
+
+[size=4][b]Permissions — no request was needed[/b][/size]
+
+Dtry's mod page sets [b]Modification permission[/b] explicitly:
+
+[quote]"You are allowed to modify my files and release bug fixes or improve on the features [b]without permission from or credit to me[/b]."[/quote]
+
+That grant is what this patch relies on, since the upstream repository carries no licence file. The [b]Upload permission[/b] setting forbids uploading the file to [i]other sites[/i] — Nexus is not "another site", and this patch is not mirrored anywhere else, so that is respected.
+
+Credit is given to Dtry throughout anyway, even though the permissions explicitly say it isn't required. It's their mod.
+
+[line]
+
+[size=4][b]Do you actually need this?[/b][/size]
+
+Install it only if you are on [b]Skyrim SE/AE 1.7.99[/b] and DtryKeyUtil fails at startup with an address library error, or a mod that depends on it stopped working.
+
+If you are still on 1.6.x or 1.5.97, [b]you do not need this[/b] — keep using the official release.
+
+[line]
+
+[size=4][b]Requirements[/b][/size]
+
+[list]
+[*][b]DtryKeyUtil[/b] — the original mod. Mandatory.
+[*][b]SKSE64 2.3.0[/b] — the 1.7.99 build
+[*][b]Address Library for SKSE Plugins[/b] — updated, must include [font=Courier New]versionlib-1-7-99-0.bin[/font]
+[*]Whatever mods you use that depend on DtryKeyUtil
+[/list]
+
+[line]
+
+[size=4][b]Installation[/b][/size]
+
+Install the original mod first, then add this patch on top.
+
+[b]Vortex[/b]
+[list=1]
+[*]Mods tab → [i]Install From File[/i] → pick the archive → Enable.
+[*]Vortex will report a [b]file conflict[/b] with the original mod — both ship the same DLL.
+[*]When prompted, tell Vortex that [b]this patch wins[/b]. In the rules dialog, set this patch to [i]Load After[/i] the original mod.
+[/list]
+
+[quote][b]This is the step people get wrong.[/b] If you pick the other option, Vortex keeps deploying the old DLL and it will look like the patch did nothing at all.[/quote]
+
+[b]Mod Organizer 2[/b]
+[i]Install a new mod from an archive[/i], then place this patch [b]below[/b] the original mod in the left pane. In MO2, lower wins.
+
+[b]Manual[/b]
+Copy [font=Courier New]SKSE\Plugins\DtryKeyUtil.dll[/font] over the existing one — [b]only[/b] if you installed the mod manually. With Vortex or MO2, always go through the manager.
+
+[b]Uninstalling[/b]
+Disable or remove the patch. The original mod's DLL comes back and nothing else is touched. No save-game changes are involved — only the plugin binary is swapped.
+
+[b]Checking that it worked[/b]
+Launch the game. If it reaches the main menu with no error box, it worked. The plugin writes [font=Courier New]Documents\My Games\Skyrim Special Edition\SKSE\DtryKeyUtil.log[/font], which should log that it finished loading, with no address library errors.
+
+[line]
+
+[size=4][b]What was broken[/b][/size]
+
+Skyrim 1.7.99 shipped a [b]new Address Library format[/b] — format 5, with a 96-byte header and a dense array indexed directly by ID. A 1.7.99 [font=Courier New]versionlib-1-7-99-0.bin[/font] begins with the bytes [font=Courier New]05 00 00 00[/font]. The released DLL was built against a much older CommonLibSSE-NG that only understands formats 1 and 2, so it cannot read the file at all.
+
+1.7.99 also recompiled Skyrim and moved several internal structures, which needs an updated CommonLib to model correctly.
+
+[line]
+
+[size=4][b]What was changed[/b][/size]
+
+[list]
+[*][b]Rebuilt against CommonLibSSE-NG 6.7.0[/b] — format 5 support plus the 1.7.99 layouts. The [font=Courier New]commonlibsse-ng-flatrim[/font] vcpkg port the mod used is far too old, so CommonLib is now built from source. ("flatrim" meant SE+AE without VR, so VR stays off here to match.)
+[*][b]A latent logging bug.[/b] [font=Courier New]logger::info()[/font] was being handed a runtime string as its [i]format[/i] string. Newer fmt rejects that at compile time — and it was a real bug regardless: an INI value containing braces would have been parsed as a format specifier.
+[*][b]Plugin declaration written by hand.[/b] CommonLib's CMake helper generates a declaration whose [font=Courier New]StructCompatibility[/font] field sits at the same offset as [font=Courier New]versionIndependenceEx[/font], so it can only ever write 0 or 1 — it cannot set the Address Library v5 compatibility flag. The declaration now uses [font=Courier New]SKSE::PluginVersionData[/font] directly.
+[*][b]Dependency cleanup.[/b] Dropped the unused [font=Courier New]boost-stl-interfaces[/font] and [font=Courier New]rsm-binary-io[/font] packages and the [font=Courier New]fmt[/font] 8.0.1 pin.
+[/list]
+
+[b]No feature was added, removed, or redesigned.[/b] The DLL still reports itself as version 0.0.2 and exports the same three symbols as before.
+
+[line]
+
+[size=4][b]Verification[/b][/size]
+
+Checked against a real 1.7.99 [font=Courier New]SkyrimSE.exe[/font] and its address library:
+
+[list]
+[*]The mod uses [b]no[/b] hardcoded offsets — no [font=Courier New]RELOCATION_ID[/font], no [font=Courier New]write_call[/font]/[font=Courier New]write_branch[/font]. Its only hook is a vtable replacement.
+[*]That hook targets [font=Courier New]RE::VTABLE_MovementHandler[/font] (AE id 208715), which [b]resolves on 1.7.99[/b] to RVA [font=Courier New]0x19351A8[/font], and its entries all point into [font=Courier New].text[/font] — a valid vtable.
+[*]The hooked slots [font=Courier New]0x2[/font] and [font=Courier New]0x4[/font] match [font=Courier New]ProcessThumbstick[/font] and [font=Courier New]ProcessButton[/font] in CommonLibSSE-NG 6.7.0's virtual layout, and both hold valid code pointers on 1.7.99.
+[*]The built DLL declares [font=Courier New]versionIndependenceEx = 3[/font] (struct-independent + Address Library v5) and [font=Courier New]versionIndependence = 1[/font], read back out of the binary.
+[/list]
+
+[b]Honest disclaimer: this has not been play-tested through a full playthrough.[/b] [b]Back up your save[/b] before using it on a main playthrough, and report anything odd in the comments — especially movement input handling, since that's what the vtable hook touches.
+
+[line]
+
+[size=4][b]Source code[/b][/size]
+
+[list]
+[*][b]This patch:[/b] [url=https://github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch]github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch[/url] — every change I made, as a unified diff.
+[*][b]Inside the download:[/b] [font=Courier New]source/DtryKeyUtil-1.7.99-compat.patch[/font], so you never have to trust a link.
+[*][b]Upstream (Dtry's original):[/b] [url=https://github.com/D7ry/DtryKeyUtil]github.com/D7ry/DtryKeyUtil[/url]
+[/list]
+
+The diff applies cleanly to upstream with [font=Courier New]git apply[/font]. If Dtry wants to merge it, it's there and it's theirs.
+
+[line]
+
+[size=4][b]Permissions[/b][/size]
+
+This DLL is built from Dtry's code, so [b]their terms govern it, not mine[/b].
+
+[list]
+[*][b]Do not upload this to other sites.[/b] Dtry's mod page forbids it, and that applies to this patch too.
+[*][b]Credit Dtry[/b] for the mod anywhere it's discussed — even though their permissions say it isn't required.
+[*]Translations of [i]this description[/i] are welcome — go ahead, no need to ask me.
+[*]I claim nothing over this patch beyond having compiled it. If you build on it, a mention is all I'd ask, and only if you feel like it.
+[/list]
+
+[line]
+
+[size=4][b]Credits[/b][/size]
+
+[list]
+[*][b]Dtry (D7ry)[/b] — creator of DtryKeyUtil. The mod is entirely their work, and all credit for it is theirs.
+[*][b]Brodie Thiesfield[/b] — SimpleIni (MIT), bundled in the mod's source.
+[*][b]meh321[/b] — Address Library for SKSE Plugins.
+[*][b]CommonLibSSE-NG contributors[/b] (CharmedBaryon, alandtse, powerof3, Ryan-rsm-McKenzie) — the 1.7.99 and format-5 support this patch depends on.
+[*][b]The SKSE team[/b] — SKSE64.
+[/list]
+
+[center][i]Made for the community. Nothing asked in return.
+All credit to Dtry — this only exists so their plugin can keep being used.[/i][/center]

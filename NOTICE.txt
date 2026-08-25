@@ -1,0 +1,37 @@
+DtryKeyUtil
+Original mod by D7ry (Dtry on Nexus Mods)
+Upstream source: https://github.com/D7ry/DtryKeyUtil
+
+This package is NOT the mod. It is a compatibility patch containing only the SKSE
+plugin (DtryKeyUtil.dll), recompiled from the official source, with no changes to
+the mod's design or features.
+
+LEGAL BASIS FOR THIS PATCH
+The upstream repository carries no licence file, so this patch relies on the mod
+page's own permission settings, which state:
+
+  Modification permission:
+    "You are allowed to modify my files and release bug fixes or improve on the
+     features without permission from or credit to me."
+
+That grant is what permits this rebuild. The mod page also states that the file may
+not be uploaded to OTHER sites, which is respected: this patch is not mirrored
+anywhere else.
+
+CHANGES FROM THE ORIGINAL:
+  - Rebuilt against CommonLibSSE-NG 6.7.0 to read Address Library format 5 and the
+    Skyrim 1.7.99 structure layouts. CommonLib is now built from source, because the
+    "commonlibsse-ng-flatrim" vcpkg port the mod used is far too old.
+  - src/utils.h: logger::info() was being passed a runtime string as its format
+    string. Newer fmt rejects this at compile time, and it was a latent bug: an INI
+    value containing braces would have been parsed as a format specifier.
+  - CMakeLists.txt / src/main.cpp: the plugin declaration is now written by hand with
+    SKSE::PluginVersionData instead of the generated SKSEPluginInfo(). The generated
+    form cannot set the Address Library v5 compatibility flag, because its
+    StructCompatibility field occupies the same offset as versionIndependenceEx.
+  - vcpkg.json: updated baseline, dropped the unused boost-stl-interfaces and
+    rsm-binary-io dependencies and the fmt 8.0.1 pin; vcpkg-configuration.json
+    removed (the colorglass registry is no longer used).
+
+Third-party code: src/lib/SimpleIni.h is MIT-licensed, by Brodie Thiesfield.
+Not affiliated with D7ry or Bethesda.

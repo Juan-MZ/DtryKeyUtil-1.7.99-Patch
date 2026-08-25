@@ -1,7 +1,7 @@
 [center][size=5][b]DtryKeyUtil — 1.7.99 Compatibility Patch[/b][/size]
 [i]Unofficial patch. Not a mod. The original mod is required.[/i][/center]
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]⚠ Read this first[/b][/size]
 
@@ -11,7 +11,7 @@ You [b]must[/b] have the original mod installed: [url=https://www.nexusmods.com/
 
 DtryKeyUtil is a utility plugin other mods build on, so if something that depends on it stopped working after the update, this is likely why.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Why this exists — and what I want out of it[/b][/size]
 
@@ -28,7 +28,7 @@ Everything I did is public and reviewable before you download anything:
 
 Not affiliated with Dtry or Bethesda.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Permissions — no request was needed[/b][/size]
 
@@ -36,11 +36,13 @@ Dtry's mod page sets [b]Modification permission[/b] explicitly:
 
 [quote]"You are allowed to modify my files and release bug fixes or improve on the features [b]without permission from or credit to me[/b]."[/quote]
 
-That grant is what this patch relies on, since the upstream repository carries no licence file. The [b]Upload permission[/b] setting forbids uploading the file to [i]other sites[/i] — Nexus is not "another site", and this patch is not mirrored anywhere else, so that is respected.
+That grant is what the rebuild relies on, since the upstream repository carries no licence file. The [b]Upload permission[/b] setting forbids uploading the file to [i]other sites[/i] — Nexus is not "another site", and this patch is not mirrored anywhere else, so that is respected.
+
+[b]The patch itself is GPL-3.0-or-later[/b]: the DLL statically links CommonLibSSE-NG 6.7.0, which is GPL-3.0-or-later, so the combined work has to be too. The complete corresponding source is published in the patch repository linked below. CommonLibSSE-NG was MIT until August 2026, so Dtry never faced this when they built the original. [font=Courier New]NOTICE.txt[/font] in the download explains this in full, including the fact that an absent upstream licence is a loose end I've asked Dtry to close.
 
 Credit is given to Dtry throughout anyway, even though the permissions explicitly say it isn't required. It's their mod.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Do you actually need this?[/b][/size]
 
@@ -48,7 +50,7 @@ Install it only if you are on [b]Skyrim SE/AE 1.7.99[/b] and DtryKeyUtil fails a
 
 If you are still on 1.6.x or 1.5.97, [b]you do not need this[/b] — keep using the official release.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Requirements[/b][/size]
 
@@ -59,7 +61,7 @@ If you are still on 1.6.x or 1.5.97, [b]you do not need this[/b] — keep using 
 [*]Whatever mods you use that depend on DtryKeyUtil
 [/list]
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Installation[/b][/size]
 
@@ -86,7 +88,7 @@ Disable or remove the patch. The original mod's DLL comes back and nothing else 
 [b]Checking that it worked[/b]
 Launch the game. If it reaches the main menu with no error box, it worked. The plugin writes [font=Courier New]Documents\My Games\Skyrim Special Edition\SKSE\DtryKeyUtil.log[/font], which should log that it finished loading, with no address library errors.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]What was broken[/b][/size]
 
@@ -94,7 +96,7 @@ Skyrim 1.7.99 shipped a [b]new Address Library format[/b] — format 5, with a 9
 
 1.7.99 also recompiled Skyrim and moved several internal structures, which needs an updated CommonLib to model correctly.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]What was changed[/b][/size]
 
@@ -107,7 +109,7 @@ Skyrim 1.7.99 shipped a [b]new Address Library format[/b] — format 5, with a 9
 
 [b]No feature was added, removed, or redesigned.[/b] The DLL still reports itself as version 0.0.2 and exports the same three symbols as before.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Verification[/b][/size]
 
@@ -122,19 +124,19 @@ Checked against a real 1.7.99 [font=Courier New]SkyrimSE.exe[/font] and its addr
 
 [b]Honest disclaimer: this has not been play-tested through a full playthrough.[/b] [b]Back up your save[/b] before using it on a main playthrough, and report anything odd in the comments — especially movement input handling, since that's what the vtable hook touches.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Source code[/b][/size]
 
 [list]
 [*][b]This patch:[/b] [url=https://github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch]github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch[/url] — every change I made, as a unified diff.
-[*][b]Inside the download:[/b] [font=Courier New]source/DtryKeyUtil-1.7.99-compat.patch[/font], so you never have to trust a link.
+[*][b]What the download itself contains:[/b] the DLL, the GPL-3 text, the CommonLibSSE-NG exceptions, the upstream licence and a notice listing every change. The source is not bundled with it — GPL-3 section 6(d) lets it be offered from a designated place instead, which is the repository above.
 [*][b]Upstream (Dtry's original):[/b] [url=https://github.com/D7ry/DtryKeyUtil]github.com/D7ry/DtryKeyUtil[/url]
 [/list]
 
 The diff applies cleanly to upstream with [font=Courier New]git apply[/font]. If Dtry wants to merge it, it's there and it's theirs.
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Permissions[/b][/size]
 
@@ -147,7 +149,7 @@ This DLL is built from Dtry's code, so [b]their terms govern it, not mine[/b].
 [*]I claim nothing over this patch beyond having compiled it. If you build on it, a mention is all I'd ask, and only if you feel like it.
 [/list]
 
-[line]
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 [size=4][b]Credits[/b][/size]
 

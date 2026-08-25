@@ -38,6 +38,14 @@ needed fixing:
 I also checked the vtable hook against a real 1.7.99 binary: `VTABLE_MovementHandler` still
 resolves, and slots `0x2` / `0x4` still line up with `ProcessThumbstick` / `ProcessButton`.
 
+**One small favour, if you're willing:** would you consider adding a licence file to the repo? MIT
+would match what your Nexus permissions already say. The reason it matters now is that
+CommonLibSSE-NG switched from MIT to GPL-3 in August 2026, so anything that statically links it has
+to be distributed under GPL-3 or a GPL-compatible licence. Your permissions clearly allow releasing
+fixes, but "no licence file" isn't technically a GPL-compatible licence, so an explicit one would
+put my patch — and anyone else's — on solid ground. Entirely your call; I'll respect whatever you
+decide.
+
 **The diff is yours — take any of it, no conditions, no credit needed.** If you'd rather push the
 fix yourself, that's the better outcome and I'll pull my patch the same day. Same if you'd just
 prefer it gone, no questions.
@@ -56,7 +64,10 @@ I want nothing out of it. Thanks for the plugin — plenty of mods lean on it.
 4. Resume los tres arreglos reales — incluido el bug del INI, que es un fallo suyo de verdad y le
    sirve aunque no use tu parche.
 5. Menciona la verificación del hook de vtable contra el binario real de 1.7.99.
-6. Le ofrece el código sin condiciones y se compromete a retirarlo si actualiza o si lo pide.
+6. Le pide, como favor y sin presionar, que añada un archivo de licencia (MIT) al repo, explicando
+   por qué importa ahora: CommonLibSSE-NG pasó de MIT a GPL-3 y "sin licencia" no es una licencia
+   compatible con GPL.
+7. Le ofrece el código sin condiciones y se compromete a retirarlo si actualiza o si lo pide.
 
 ## If they reply
 

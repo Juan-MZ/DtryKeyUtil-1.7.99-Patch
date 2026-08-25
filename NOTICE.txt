@@ -6,9 +6,36 @@ This package is NOT the mod. It is a compatibility patch containing only the SKS
 plugin (DtryKeyUtil.dll), recompiled from the official source, with no changes to
 the mod's design or features.
 
-LEGAL BASIS FOR THIS PATCH
-The upstream repository carries no licence file, so this patch relies on the mod
-page's own permission settings, which state:
+LICENSING OF THIS PATCH
+
+This patch is distributed under the GNU General Public License version 3 or later
+(see LICENSE), WITH the Modding Exception and GPL-3.0 Linking Exception granted
+by CommonLibSSE-NG (see LICENSE-CommonLibSSE-NG-EXCEPTIONS.md), and the complete
+corresponding source is published in the patch repository, under
+source/complete-source/, as GPL-3 section 6 requires:
+  https://github.com/Juan-MZ/DtryKeyUtil-1.7.99-Patch
+Section 6(d) permits offering it from a designated place rather than bundling it
+with the binary, so this archive carries the DLL, the licences and this notice.
+
+Why: the compiled DtryKeyUtil.dll statically links CommonLibSSE-NG 6.7.0 (commit
+3d8161461791), which is GPL-3.0-or-later. A plugin that statically links it forms
+a combined work and must be distributed under GPL-3.0-or-later or a
+GPL-compatible licence. CommonLibSSE-NG was MIT-licensed until August 2026; the
+original mod predates that change, so D7ry never faced this.
+
+  KNOWN GAP: unlike the other mods in this series, the upstream DtryKeyUtil
+  repository carries NO licence file at all. GPL-3 distribution of the combined
+  work assumes the mod's own portion is under a GPL-compatible licence, and an
+  absent licence is not one. D7ry's Nexus permission grant (below) is broad -
+  broader in spirit than MIT - but it is a permission to modify and release, not
+  an explicit licence grant that covers redistributing their code under GPL-3.
+  The clean fix is for D7ry to add an explicit licence (MIT would match the
+  spirit of their permissions); that request is included in the courtesy message
+  in nexus/03-message-to-author.md. Until then this is published in good faith on
+  the strength of that grant, and will be withdrawn on request.
+
+LEGAL BASIS FOR MODIFYING AND RELEASING
+The mod page's own permission settings state:
 
   Modification permission:
     "You are allowed to modify my files and release bug fixes or improve on the

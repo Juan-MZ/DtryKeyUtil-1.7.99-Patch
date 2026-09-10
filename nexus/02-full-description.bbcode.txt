@@ -3,9 +3,37 @@
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
+[size=4][b]✅ Works on Skyrim 1.7.104 too[/b][/size]
+
+[b]The same file covers 1.7.104[/b] (the 27 August 2026 update). Nothing had to be rebuilt — but I re-verified it against the new executable rather than assuming.
+
+1.7.104 moved [i]every[/i] function in the game. It did not change any data structure, and it did not change the code [i]inside[/i] the functions this patch touches. Every offset here is expressed relative to an Address Library ID; the ID relocates itself, so the patch still lands in exactly the same place. I confirmed that site by site by disassembling the real 1.7.104 binary.
+
+[b]What you do need is the updated Address Library[/b] — [b]All in One v13[/b] or newer, which adds [font=Courier New]versionlib-1-7-104-0.bin[/font] — plus [b]SKSE64 2.3.1[/b].
+
+[quote]If you see [i]"DLL plugins you have installed require a new version of the Address Library"[/i], that is the Address Library being out of date, not this patch. Update it and the message goes away.[/quote]
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+[size=4][b]How this patch was made[/b][/size]
+
+[b]It was made with AI assistance.[/b] I am saying so up front, unprompted, so you can weigh it yourself — and because one of the mod authors I asked for permission specifically requested the disclosure.
+
+What that does and does not mean:
+
+[list]
+[*]The claims under [b]Verification[/b] are not a model's say-so. Each one was checked against the real Skyrim executable by disassembly, and the evidence is public in the repository linked below — offsets, instruction sequences and the reasoning behind each conclusion.
+[*]It has [b]not[/b] been play-tested through a full playthrough. That limit is real, and it is stated plainly wherever it matters.
+[*]The original author has [b]not[/b] reviewed these changes.
+[/list]
+
+If that is not a trade you want to make, don't install it — wait for the author's own update. That is a perfectly reasonable call and I would not argue with it.
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
 [size=4][b]⚠ Read this first[/b][/size]
 
-[b]This is not a standalone mod.[/b] It is [b]only the recompiled DLL[/b] for DtryKeyUtil, so the mod works again on Skyrim SE/AE [b]1.7.99[/b] (the 20 August 2026 update).
+[b]This is not a standalone mod.[/b] It is [b]only the recompiled DLL[/b] for DtryKeyUtil, so the mod works again on Skyrim SE/AE [b]1.7.99 and 1.7.104[/b] (the 20 and 27 August 2026 updates).
 
 You [b]must[/b] have the original mod installed: [url=https://www.nexusmods.com/skyrimspecialedition/mods/69944]DtryKeyUtil[/url] by [b]Dtry[/b]. It also provides the [font=Courier New]SKSE/Plugins/dtryKeyUtil/config/[/font] settings tree, which this patch does not include.
 
@@ -46,7 +74,7 @@ Credit is given to Dtry throughout anyway, even though the permissions explicitl
 
 [size=4][b]Do you actually need this?[/b][/size]
 
-Install it only if you are on [b]Skyrim SE/AE 1.7.99[/b] and DtryKeyUtil fails at startup with an address library error, or a mod that depends on it stopped working.
+Install it only if you are on [b]Skyrim SE/AE 1.7.99 or 1.7.104[/b] and DtryKeyUtil fails at startup with an address library error, or a mod that depends on it stopped working.
 
 If you are still on 1.6.x or 1.5.97, [b]you do not need this[/b] — keep using the official release.
 
@@ -56,8 +84,8 @@ If you are still on 1.6.x or 1.5.97, [b]you do not need this[/b] — keep using 
 
 [list]
 [*][b]DtryKeyUtil[/b] — the original mod. Mandatory.
-[*][b]SKSE64 2.3.0[/b] — the 1.7.99 build
-[*][b]Address Library for SKSE Plugins[/b] — updated, must include [font=Courier New]versionlib-1-7-99-0.bin[/font]
+[*][b]SKSE64 2.3.1[/b] on 1.7.104, or 2.3.0 on 1.7.99
+[*][b]Address Library for SKSE Plugins[/b] — [b]All in One v13[/b] or newer on 1.7.104 (it adds [font=Courier New]versionlib-1-7-104-0.bin[/font]); v12 is enough on 1.7.99
 [*]Whatever mods you use that depend on DtryKeyUtil
 [/list]
 
